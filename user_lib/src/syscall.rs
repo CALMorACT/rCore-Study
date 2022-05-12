@@ -22,5 +22,5 @@ pub fn sys_write(fd: usize, buffer: &[u8]) -> isize {
 }
 
 pub fn sys_exit(xstate: i32) -> isize {
-    syscall(SYSCALL_EXIT, [x as usize, 0, 0])
+    syscall(SYSCALL_EXIT, [xstate as usize, 0, 0])
 }

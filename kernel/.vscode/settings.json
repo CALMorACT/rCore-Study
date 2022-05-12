@@ -1,7 +1,13 @@
 {
     "cSpell.words": [
         "ebss",
+        "repr",
         "riscv",
-        "sbss"
+        "sbss",
+        "scause",
+        "sepc",
+        "stval",
+        "stvec",
+        "syscall"
     ]
 }

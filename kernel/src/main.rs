@@ -5,8 +5,12 @@
 #[macro_use]
 mod console;
 
+mod batch;
 mod lang_item;
 mod sbi;
+mod sync;
+mod syscall;
+mod trap;
 
 use core::arch::global_asm;
 

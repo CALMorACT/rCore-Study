@@ -1,4 +1,5 @@
 mod lab1;
+mod lab2;
 
 fn main() {
     println!("Hello, world!");
