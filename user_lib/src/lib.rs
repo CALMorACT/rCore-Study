@@ -1,6 +1,8 @@
 #![no_std]
 #![feature(linkage)]
 
+use syscall::sys_yield;
+
 #[no_mangle]
 #[link_section = ".text.entry"]
 
@@ -35,4 +37,8 @@ pub fn write(fd: usize, buf: &[u8]) -> isize {
 
 pub fn exit(exit_code: i32) -> isize {
     syscall::sys_exit(exit_code)
+}
+
+pub fn yield_() -> isize {
+    sys_yield()
 }

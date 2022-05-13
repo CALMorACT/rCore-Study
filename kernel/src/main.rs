@@ -4,10 +4,13 @@
 
 #[macro_use]
 mod console;
-
+mod loader;
 mod batch;
 mod lang_item;
 mod sbi;
+mod config;
+
+mod task;
 mod sync;
 mod syscall;
 mod trap;

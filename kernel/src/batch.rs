@@ -19,9 +19,9 @@ impl KernelStack {
     fn get_sp(&self) -> usize {
         self.data.as_ptr() as usize + KERNEL_STACK_SIZE
     }
-    fn push_context(&self, cx: TrapContext) -> &'static mut context::TrapContext {
+    fn push_context(&self, cx: context::TrapContext) -> &'static mut context::TrapContext {
         let cx_ptr =
-            (self.get_sp() - core::mem::size_of::<context::TrapContext>()) as *mut TrapContext;
+            (self.get_sp() - core::mem::size_of::<context::TrapContext>()) as *mut context::TrapContext;
         unsafe {
             *cx_ptr = cx;
             cx_ptr.as_mut().unwrap()
@@ -62,7 +62,7 @@ impl AppManager {
                 i,
                 self.app_start[i],
                 self.app_start[i + 1]
-            )
+            );
         }
     }
 
@@ -104,7 +104,7 @@ lazy_static::lazy_static! {
             app_start[..=num_app].copy_from_slice(app_start_raw);
             AppManager { num_app, current_app: 0, app_start }
         })
-    }
+    };
 }
 
 pub fn init() {

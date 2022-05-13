@@ -6,10 +6,11 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-riscv = { git = "https://github.com/rcore-os/riscv", features = ["inline-asm"] }
+riscv = "0.8.0"
+# riscv = { git = "https://github.com/rcore-os/riscv" }
 lazy_static = { version = "1.4.0", features = ["spin_no_std"] }
 
-[[bin]]
-name = "kernel"
-test = false
-bench = false
+# [[bin]]
+# name = "kernel"
+# test = false
+# bench = false

@@ -8,17 +8,19 @@ use riscv::register::{
     stval, stvec,
 };
 
+use crate::{batch::run_next_app, syscall::syscall};
+
 global_asm!(include_str!("trap.S"));
 
 pub fn init() {
     extern "C" {
         fn __alltraps();
     }
-    unsafe { stvec::write(__alltraps as usize, Trap) }
+    unsafe { stvec::write(__alltraps as usize, TrapMode::Direct) }
 }
 
 #[no_mangle]
-pub fn trap_handler(cx: &mut context::TrapContext) -> &mut TrapContext {
+pub fn trap_handler(cx: &mut context::TrapContext) -> &mut context::TrapContext {
     let scause = scause::read();
     let stval = stval::read();
     match scause.cause() {
