@@ -1,13 +1,16 @@
-macro SAVE_GP n
+.altmacro
+.macro SAVE_GP n
    sd x\n, \n*8(sp)
-endm
+.endm
 
-macro LOAD_GP n
+.macro LOAD_GP n
    ld x\n, \n*8(sp)
-endm
+.endm
 
-
-align 2
+    .section .text
+    .globl __alltraps
+    .globl __restore
+    .align 2
 __alltraps:
     csrrw sp, sscratch, sp
     # now sp->kernel stack, sscratch->user stack

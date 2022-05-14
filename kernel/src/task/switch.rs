@@ -7,6 +7,6 @@ use super::context::TaskContext;
 extern "C" {
     pub fn __switch(
         current_task_context_ptr: *mut TaskContext,
-        next_task_context_ptr: *mut TaskContext,
+        next_task_context_ptr: *const TaskContext,
     );
 }

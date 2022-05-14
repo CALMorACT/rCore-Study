@@ -27,5 +27,5 @@ pub fn sys_exit(xstate: i32) -> isize {
 }
 
 pub fn sys_yield() -> isize {
-    syscall(SYSCALL_YIELD, [args])
+    syscall(SYSCALL_YIELD, [0, 0, 0])
 }

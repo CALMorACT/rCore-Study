@@ -1,5 +1,18 @@
+use crate::batch;
 use crate::config;
+use crate::config::KERNEL_STACK_SIZE;
+use crate::config::MAX_APP_NUM;
+use crate::config::USER_STACK_SIZE;
+use crate::trap::context::TrapContext;
 use core::arch::asm;
+
+static KERNEL_STACK: [batch::KernelStack; MAX_APP_NUM] = [batch::KernelStack {
+    data: [0; KERNEL_STACK_SIZE],
+}; MAX_APP_NUM];
+
+static USER_STACK: [batch::UserStack; MAX_APP_NUM] = [batch::UserStack {
+    data: [0; USER_STACK_SIZE],
+}; MAX_APP_NUM];
 
 pub fn get_base_i(app_id: usize) -> usize {
     config::APP_BASE_ADDRESS + app_id * config::APP_SIZE_LIMIT
@@ -12,7 +25,14 @@ pub fn get_num_app() -> usize {
     unsafe { (_num_app as *const usize).read_volatile() }
 }
 
-pub fn load_app() {
+pub fn init_app_cx(app_id: usize) -> *mut TrapContext {
+    KERNEL_STACK[app_id].push_context(TrapContext::app_init_context(
+        get_base_i(app_id),
+        USER_STACK[app_id].get_sp(),
+    ))
+}
+
+pub fn load_apps() {
     extern "C" {
         fn _num_app();
     }

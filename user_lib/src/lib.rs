@@ -1,14 +1,19 @@
 #![no_std]
 #![feature(linkage)]
+#![feature(panic_info_message)]
 
-use syscall::sys_yield;
+#[macro_use]
+pub mod console;
+mod lang_items;
+mod syscall;
+
+use crate::syscall::sys_exit;
 
 #[no_mangle]
 #[link_section = ".text.entry"]
-
 pub extern "C" fn _start() -> ! {
     clear_bss();
-    exit(main());
+    sys_exit(main());
     panic!("unreachable after sys_exit!");
 }
 
@@ -21,24 +26,9 @@ fn clear_bss() {
     (sbss as usize..ebss as usize).for_each(|a| unsafe { (a as *mut u8).write_volatile(0) });
 }
 
-mod syscall;
-mod console;
-
 // 目的在于保护未找到main函数的情况
 #[linkage = "weak"]
 #[no_mangle]
 fn main() -> i32 {
     panic!("Can not find main!");
-}
-
-pub fn write(fd: usize, buf: &[u8]) -> isize {
-    syscall::sys_write(fd, buf)
-}
-
-pub fn exit(exit_code: i32) -> isize {
-    syscall::sys_exit(exit_code)
-}
-
-pub fn yield_() -> isize {
-    sys_yield()
 }

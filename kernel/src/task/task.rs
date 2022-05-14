@@ -53,7 +53,7 @@ impl TaskManger {
             inner.tasks[next_task].status = TaskStatus::Running;
             inner.current_task = next_task;
             let last_task_cx_ptr = &mut inner.tasks[last_task].task_cx as *mut TaskContext;
-            let next_task_cx_ptr = &mut inner.tasks[next_task].task_cx as *mut TaskContext;
+            let next_task_cx_ptr = &mut inner.tasks[next_task].task_cx as *const TaskContext;
             drop(inner);
             unsafe {
                 __switch(last_task_cx_ptr, next_task_cx_ptr);
@@ -61,5 +61,17 @@ impl TaskManger {
         } else {
             panic!("no task to run, may be All application suspended/exited");
         }
+    }
+    pub fn run_first_task(&self) -> ! {
+        let mut inner = self.inner.exclusive_access();
+        let first_task = &mut inner.tasks[0];
+        first_task.status = TaskStatus::Running;
+        let next_task_cx_ptr = &first_task.task_cx as *const TaskContext;
+        drop(inner);
+        let mut _unused = TaskContext::zero_init();
+        unsafe {
+            __switch(&mut _unused as *mut TaskContext, next_task_cx_ptr);
+        }
+        panic!("[Kernel] [run_first_task]should not reach here");
     }
 }

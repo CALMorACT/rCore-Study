@@ -16,9 +16,7 @@ pub fn print(args: fmt::Arguments) {
     Stdout.write_fmt(args).unwrap();
 }
 
-pub fn info(args: fmt::Arguments) {
-    Stdout.write_fmt(args).unwrap();
-}
+//TODO: 着色输出
 
 #[macro_export]
 macro_rules! print {

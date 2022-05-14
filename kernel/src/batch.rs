@@ -1,40 +1,35 @@
-use core::arch::asm;
-
+use crate::config::*;
 use crate::sync;
 use crate::trap::context;
-
-const MAX_APP_NUM: usize = 20;
-const USER_STACK_SIZE: usize = 4096 * 2; // 8 * 1024 Byte;
-const KERNEL_STACK_SIZE: usize = 4096 * 2;
-
-const APP_BASE_ADDRESS: usize = 0x80400000;
-const APP_SIZE_LIMIT: usize = 0x20000;
+use core::arch::asm;
 
 #[repr(align(4096))]
-struct KernelStack {
-    data: [u8; KERNEL_STACK_SIZE],
+#[derive(Clone, Copy)]
+pub struct KernelStack {
+    pub data: [u8; KERNEL_STACK_SIZE],
 }
 
 impl KernelStack {
-    fn get_sp(&self) -> usize {
+    pub fn get_sp(&self) -> usize {
         self.data.as_ptr() as usize + KERNEL_STACK_SIZE
     }
-    fn push_context(&self, cx: context::TrapContext) -> &'static mut context::TrapContext {
-        let cx_ptr =
-            (self.get_sp() - core::mem::size_of::<context::TrapContext>()) as *mut context::TrapContext;
+    pub fn push_context(&self, cx: context::TrapContext) -> &'static mut context::TrapContext {
+        let cx_ptr = (self.get_sp() - core::mem::size_of::<context::TrapContext>())
+            as *mut context::TrapContext;
         unsafe {
             *cx_ptr = cx;
             cx_ptr.as_mut().unwrap()
         }
     }
 }
-
-struct UserStack {
-    data: [u8; USER_STACK_SIZE],
+#[repr(align(4096))]
+#[derive(Copy, Clone)]
+pub struct UserStack {
+    pub data: [u8; USER_STACK_SIZE],
 }
 
 impl UserStack {
-    fn get_sp(&self) -> usize {
+    pub fn get_sp(&self) -> usize {
         self.data.as_ptr() as usize + KERNEL_STACK_SIZE
     }
 }
@@ -47,6 +42,7 @@ static USER_STACK: UserStack = UserStack {
     data: [0; USER_STACK_SIZE],
 };
 
+// 批处理系统的实现方式
 struct AppManager {
     num_app: usize,
     current_app: usize,

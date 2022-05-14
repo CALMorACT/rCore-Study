@@ -3,6 +3,8 @@
         "ecall",
         "inlateout",
         "syscall",
-        "xstate"
+        "xstate",
+        "ebss",
+        "sbss"
     ],
 }

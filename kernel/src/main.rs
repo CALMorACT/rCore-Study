@@ -4,15 +4,15 @@
 
 #[macro_use]
 mod console;
-mod loader;
 mod batch;
-mod lang_item;
-mod sbi;
 mod config;
+mod lang_item;
+mod loader;
+mod sbi;
 
-mod task;
 mod sync;
 mod syscall;
+mod task;
 mod trap;
 
 use core::arch::global_asm;
@@ -23,6 +23,9 @@ global_asm!(include_str!("entry.asm"));
 pub fn rust_main() -> ! {
     clear_bss();
     println!("Hello, world!");
+    trap::init();
+    loader::load_apps();
+    task::start_run_first_task();
     panic!("Shutdown  machine");
 }
 
