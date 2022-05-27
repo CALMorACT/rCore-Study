@@ -5,15 +5,17 @@ if [ $# -ne 1 ]; then
     exit 1
 fi
 
-BOOTLOADER=../bootloader/rustsbi-qemu.bin
-FS_IMG=target/riscv64gc-unknown-none-elf/release/study.bin
+BOOTLOADER=../../rCore-Tutorial-v3/bootloader/rustsbi-qemu.bin
+FS_IMG=target/riscv64gc-unknown-none-elf/release/kernel.bin
 
 case ${1} in
 "compile")
+    echo 'Try to complie user lib and some application'
+    
     echo "Try to complie target"
     cargo build --release
     echo "Strip target"
-    rust-objcopy --strip-all target/riscv64gc-unknown-none-elf/release/study -O binary target/riscv64gc-unknown-none-elf/release/study.bin
+    rust-objcopy --strip-all target/riscv64gc-unknown-none-elf/release/kernel -O binary target/riscv64gc-unknown-none-elf/release/kernel.bin
     echo 'Over Complied'
     ;;
 

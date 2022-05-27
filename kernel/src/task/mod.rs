@@ -1,7 +1,10 @@
+use alloc::vec::Vec;
+
 use crate::{
     config,
-    loader::{get_num_app, init_app_cx},
+    loader::{get_num_app, get_app_data},
     sync::UPSafeCell,
+    task::task::TaskControlBlock, trap::context::TrapContext,
 };
 
 mod context;
@@ -11,19 +14,15 @@ mod task;
 lazy_static::lazy_static! {
     /// Global variable: TASK_MANAGER
     pub static ref TASK_MANAGER: task::TaskManger = {
+        println!("init TASK_MANAGER");
         let num_app = get_num_app();
-        let mut tasks = [
-            task::TaskControlBlock{
-                status: task::TaskStatus::UnInit,
-                task_cx: context::TaskContext::zero_init(),
-            }; config::MAX_APP_NUM
-        ];
-        // 我们在 static 初始化task时候就会将所有所需的 内核栈和用户栈 初始化出来
+        println!("num_app = {}", num_app);
+
+        let mut tasks = Vec::<TaskControlBlock>::new();
         for i in 0..num_app {
-            //FIXME: 这一段初始化的 TrapContext 的代码类型可以再整理一下
-            tasks[i].task_cx = context::TaskContext::goto_restore(init_app_cx(i) as usize);
-            tasks[i].status = task::TaskStatus::Ready;
+            tasks.push(TaskControlBlock::new(get_app_data(i), i));
         }
+
         task::TaskManger {
             num_app,
             inner: unsafe {
@@ -47,4 +46,16 @@ pub fn exit_current_and_run_next() {
 
 pub fn start_run_first_task() {
     TASK_MANAGER.run_first_task();
+}
+
+pub fn current_taskinfo() -> usize {
+    TASK_MANAGER.get_current_task()
+}
+
+pub fn current_tasktoken() -> usize {
+    TASK_MANAGER.get_current_token()
+}
+
+pub fn current_trap_cx() -> &'static mut TrapContext {
+    TASK_MANAGER.get_current_trap_cx()
 }

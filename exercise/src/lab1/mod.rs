@@ -10,5 +10,3 @@ pub fn ls(path: &str) {
         }
     }
 }
-
-pub fn sleep() {}

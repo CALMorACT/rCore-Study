@@ -4,7 +4,13 @@
 #[macro_use]
 extern crate user_lib;
 
+use user_lib::syscall::sys_yield;
+
 #[no_mangle]
 fn main() {
-    println!("Hello world!");
+    for i in 0..10 {
+        println!("Hello, world! [{}/10]", i + 1);
+        sys_yield();
+    }
+    println!("Test Hello world OK!");
 }

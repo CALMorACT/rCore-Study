@@ -5,7 +5,7 @@
 #[macro_use]
 pub mod console;
 mod lang_items;
-mod syscall;
+pub mod syscall;
 
 use crate::syscall::sys_exit;
 

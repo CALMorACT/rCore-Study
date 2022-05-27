@@ -25,12 +25,13 @@ pub fn get_num_app() -> usize {
     unsafe { (_num_app as *const usize).read_volatile() }
 }
 
-pub fn init_app_cx(app_id: usize) -> *mut TrapContext {
-    KERNEL_STACK[app_id].push_context(TrapContext::app_init_context(
-        get_base_i(app_id),
-        USER_STACK[app_id].get_sp(),
-    ))
-}
+//[x]: 对于批处理是有效的 
+// pub fn init_app_cx(app_id: usize) -> *mut TrapContext {
+//     KERNEL_STACK[app_id].push_context(TrapContext::app_init_context(
+//         get_base_i(app_id),
+//         USER_STACK[app_id].get_sp(),
+//     ))
+// }
 
 pub fn load_apps() {
     extern "C" {
@@ -57,5 +58,21 @@ pub fn load_apps() {
         };
         let dst = unsafe { core::slice::from_raw_parts_mut(base_i as *mut u8, src.len()) };
         dst.copy_from_slice(src);
+    }
+}
+
+pub fn get_app_data(app_id: usize) -> &'static [u8] {
+    extern "C" {
+        fn _num_app();
+    }
+    let num_app_ptr = _num_app as *const usize;
+    let num_app = get_num_app();
+    let app_start = unsafe { core::slice::from_raw_parts(num_app_ptr.add(1), num_app + 1) };
+    assert!(app_id < num_app);
+    unsafe {
+        core::slice::from_raw_parts(
+            app_start[app_id] as *const u8,
+            app_start[app_id + 1] - app_start[app_id],
+        )
     }
 }

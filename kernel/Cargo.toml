@@ -10,8 +10,11 @@ rust-version = "1.62.0"
 riscv = "0.8.0"
 # riscv = { git = "https://github.com/rcore-os/riscv" }
 lazy_static = { version = "1.4.0", features = ["spin_no_std"] }
+buddy_system_allocator = "0.8.0"
+bitflags = "1.3.2"
+xmas-elf = "0.8.0"
 
-# [[bin]]
-# name = "kernel"
-# test = false
-# bench = false
+[[bin]]
+name = "kernel"
+test = false
+bench = false

@@ -2,6 +2,7 @@
     "cSpell.words": [
         "ebss",
         "icache",
+        "immut",
         "repr",
         "riscv",
         "sbss",
@@ -9,6 +10,8 @@
         "sepc",
         "stval",
         "stvec",
-        "syscall"
+        "syscall",
+        "unmap",
+        "Virt"
     ]
 }
