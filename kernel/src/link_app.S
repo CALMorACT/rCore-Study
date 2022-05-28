@@ -13,27 +13,31 @@ _num_app:
     .section .data
     .global app_0_start
     .global app_0_end
+    .align 3
 app_0_start:
-    .incbin "../user_lib/target/riscv64gc-unknown-none-elf/release/hello_world.bin"
+    .incbin "../user/target/riscv64gc-unknown-none-elf/release/hello_world"
 app_0_end:
 
     .section .data
     .global app_1_start
     .global app_1_end
+    .align 3
 app_1_start:
-    .incbin "../user_lib/target/riscv64gc-unknown-none-elf/release/power.bin"
+    .incbin "../user/target/riscv64gc-unknown-none-elf/release/power"
 app_1_end:
 
     .section .data
     .global app_2_start
     .global app_2_end
+    .align 3
 app_2_start:
-    .incbin "../user_lib/target/riscv64gc-unknown-none-elf/release/sleep.bin"
+    .incbin "../user/target/riscv64gc-unknown-none-elf/release/sleep"
 app_2_end:
 
     .section .data
     .global app_3_start
     .global app_3_end
+    .align 3
 app_3_start:
-    .incbin "../user_lib/target/riscv64gc-unknown-none-elf/release/store_fault.bin"
+    .incbin "../user/target/riscv64gc-unknown-none-elf/release/store_fault"
 app_3_end:

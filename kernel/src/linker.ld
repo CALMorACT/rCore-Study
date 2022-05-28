@@ -36,6 +36,7 @@ SECTIONS
     edata = .;
     .bss : {
         *(.bss.stack)
+        10
         sbss = .;
         *(.bss .bss.*)
         *(.sbss .sbss.*)

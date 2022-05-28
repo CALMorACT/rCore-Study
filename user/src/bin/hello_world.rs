@@ -2,9 +2,9 @@
 #![no_main]
 
 #[macro_use]
-extern crate user_lib;
+extern crate user;
 
-use user_lib::syscall::sys_yield;
+use user::syscall::sys_yield;
 
 #[no_mangle]
 fn main() {

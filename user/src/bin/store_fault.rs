@@ -1,11 +1,11 @@
 #![no_std]
 #![no_main]
 
-use user_lib::syscall::sys_yield;
 
 #[macro_use]
-extern crate user_lib;
+extern crate user;
 
+use user::syscall::sys_yield;
 #[no_mangle]
 fn main() {
     println!("Into Test store_fault, we will insert an invalid store operation...");

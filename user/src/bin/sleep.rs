@@ -1,11 +1,12 @@
 #![no_std]
 #![no_main]
 
-use user_lib::syscall::sys_get_time;
 
 #[macro_use]
-extern crate user_lib;
+extern crate user;
+use user::syscall::sys_get_time;
 
+#[no_mangle]
 fn main() {
     let current_timer = sys_get_time();
     let wait_for = current_timer + 3000;
