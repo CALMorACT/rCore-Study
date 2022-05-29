@@ -154,6 +154,7 @@ impl MemorySet {
     pub fn new_kernel() -> Self {
         let mut memory_set = Self::new_bare();
         //TODO: map trampoline
+        memory_set.map_trampoline();
         // map kernel sections
         println!(
             "[kernel] .text {:#x}, {:#x}",
@@ -229,6 +230,7 @@ impl MemorySet {
     pub fn load_elf(elf_data: &[u8]) -> Result<(Self, usize, usize), &str> {
         let mut memory_set = Self::new_bare();
         //TODO: map trampoline
+        memory_set.map_trampoline();
         //map elf header
         let elf = xmas_elf::ElfFile::new(elf_data)?;
         let elf_header = elf.header;

@@ -1,4 +1,4 @@
-use core::fmt::{Formatter, self, Debug};
+use core::fmt::{self, Debug, Formatter};
 
 use alloc::vec::Vec;
 
@@ -28,19 +28,19 @@ impl FrameAllocator for StackFrameAllocator {
         }
     }
     fn alloc(&mut self) -> Option<PhysPageNum> {
+        // println!("current = {:#}, end = {:#}", self.current, self.end);
         // 优先尝试从回收队列中取出一个页帧
         if let Some(ppn) = self.recycled.pop() {
             Some(ppn.into())
-        } else {
+        } else if self.current == self.end {
             // 回收队列没有页帧，则从当前页帧开始，到结束页帧
-            if self.current == self.end {
-                // 没有页帧可用，直接返回GG
-                None
-            } else {
-                // 有页帧可用，则返回该页帧(current的值)
-                self.current += 1;
-                Some((self.current - 1).into())
-            }
+            // 没有页帧可用，直接返回GG
+            println!("No available frame");
+            None
+        } else {
+            // 有页帧可用，则返回该页帧(current的值)
+            self.current += 1;
+            Some((self.current - 1).into())
         }
     }
     fn dealloc(&mut self, ppn: PhysPageNum) {
@@ -103,7 +103,7 @@ pub fn frame_alloc() -> Option<FrameTracker> {
     FRAME_ALLOCATOR
         .exclusive_access()
         .alloc()
-        .map(|ppn| FrameTracker::new(ppn))
+        .map(FrameTracker::new)
 }
 
 pub fn frame_dealloc(ppn: PhysPageNum) {

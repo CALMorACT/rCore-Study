@@ -17,10 +17,10 @@ mod task;
 mod timer;
 mod trap;
 
-use core::arch::global_asm;
 
 extern crate alloc;
 
+use core::arch::global_asm;
 global_asm!(include_str!("entry.asm"));
 global_asm!(include_str!("link_app.S"));
 
@@ -28,8 +28,10 @@ global_asm!(include_str!("link_app.S"));
 pub fn rust_main() -> ! {
     clear_bss();
     println!("[Kernel] Hello, world!");
+    mm::init();
+    println!("[kernel] mm init success!!");
     trap::init();
-    loader::load_apps();
+    // loader::load_apps();
     trap::enable_timer_interrupt();
     timer::set_next_trigger();
     task::start_run_first_task();
