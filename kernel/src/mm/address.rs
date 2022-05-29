@@ -164,8 +164,6 @@ impl VirtPageNum {
 
 // 一个简单连续迭代器的实现
 
-use core::fmt::Debug;
-
 pub trait StepByOne {
     fn step(&mut self);
 }

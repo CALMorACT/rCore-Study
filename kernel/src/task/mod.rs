@@ -1,7 +1,6 @@
 use alloc::vec::Vec;
 
 use crate::{
-    config,
     loader::{get_num_app, get_app_data},
     sync::UPSafeCell,
     task::task::TaskControlBlock, trap::context::TrapContext,

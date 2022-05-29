@@ -5,7 +5,6 @@
 
 #[macro_use]
 mod console;
-mod batch;
 mod config;
 mod lang_item;
 mod loader;

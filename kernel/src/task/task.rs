@@ -1,5 +1,3 @@
-use core::borrow::BorrowMut;
-
 use alloc::vec::Vec;
 
 use super::{context::TaskContext, switch::__switch};

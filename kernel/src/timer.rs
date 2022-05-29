@@ -1,4 +1,4 @@
-use riscv::register::{sie, time};
+use riscv::register::time;
 
 use crate::{config::CLOCK_FREQ, sbi::set_timer};
 

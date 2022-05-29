@@ -1,18 +1,40 @@
-use crate::batch;
 use crate::config;
 use crate::config::KERNEL_STACK_SIZE;
-use crate::config::MAX_APP_NUM;
 use crate::config::USER_STACK_SIZE;
-use crate::trap::context::TrapContext;
+use crate::trap::context;
 use core::arch::asm;
 
-static KERNEL_STACK: [batch::KernelStack; MAX_APP_NUM] = [batch::KernelStack {
-    data: [0; KERNEL_STACK_SIZE],
-}; MAX_APP_NUM];
 
-static USER_STACK: [batch::UserStack; MAX_APP_NUM] = [batch::UserStack {
-    data: [0; USER_STACK_SIZE],
-}; MAX_APP_NUM];
+#[repr(align(4096))]
+#[derive(Clone, Copy)]
+pub struct KernelStack {
+    pub data: [u8; KERNEL_STACK_SIZE],
+}
+
+impl KernelStack {
+    pub fn get_sp(&self) -> usize {
+        self.data.as_ptr() as usize + KERNEL_STACK_SIZE
+    }
+    pub fn push_context(&self, cx: context::TrapContext) -> &'static mut context::TrapContext {
+        let cx_ptr = (self.get_sp() - core::mem::size_of::<context::TrapContext>())
+            as *mut context::TrapContext;
+        unsafe {
+            *cx_ptr = cx;
+            cx_ptr.as_mut().unwrap()
+        }
+    }
+}
+#[repr(align(4096))]
+#[derive(Copy, Clone)]
+pub struct UserStack {
+    pub data: [u8; USER_STACK_SIZE],
+}
+
+impl UserStack {
+    pub fn get_sp(&self) -> usize {
+        self.data.as_ptr() as usize + KERNEL_STACK_SIZE
+    }
+}
 
 pub fn get_base_i(app_id: usize) -> usize {
     config::APP_BASE_ADDRESS + app_id * config::APP_SIZE_LIMIT

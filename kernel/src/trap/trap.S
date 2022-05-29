@@ -33,7 +33,6 @@ __alltraps:
     # read user stack from sscratch and save it on the kernel stack
     csrr t2, sscratch
     sd t2, 2*8(sp)
-
     # load kernel_satp into t0
     ld t0, 34*8(sp)
     # load trap_handler into t1
@@ -54,16 +53,16 @@ __restore:
     csrw sscratch, a0
     # case1: start running app by __restore
     # case2: back to U after handling trap
-    ; mv sp, a0
+    # mv sp, a0
     # now sp->kernel stack(after allocated), sscratch->user stack
     # restore sstatus/sepc
     ld t0, 32*8(sp)
     ld t1, 33*8(sp)
-    ; ld t2, 2*8(sp)
+    # ld t2, 2*8(sp)
     csrw sstatus, t0
     csrw sepc, t1
-    ; due the sscratch for user space TrapContext store in a0
-    ; csrw sscratch, t2
+    # due the sscratch for user space TrapContext store in a0
+    # csrw sscratch, t2
     
     # restore general-purpuse registers except sp/tp
     ld x1, 1*8(sp)
@@ -73,10 +72,10 @@ __restore:
         LOAD_GP %n
         .set n, n+1
     .endr
-    ; back to user stack
+    # back to user stack
     ld sp, 2*8(sp)
     # release TrapContext on kernel stack
-    ; addi sp, sp, 34*8
+    # addi sp, sp, 34*8
     # now sp->kernel stack, sscratch->user stack
-    ; csrrw sp, sscratch, sp
+    # csrrw sp, sscratch, sp
     sret
